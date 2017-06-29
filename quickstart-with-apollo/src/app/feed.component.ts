@@ -6,12 +6,10 @@ import gql from 'graphql-tag';
 
 import 'rxjs/add/operator/toPromise';
 
-const AllPostsQuery = gql`
-  query allPosts {
-      allPosts {
-          id
-          description
-          imageUrl
+const AllUsersQuery = gql`
+  query allUsers {
+      allUsers {
+          username
       }
   }
 `;
@@ -21,12 +19,10 @@ const AllPostsQuery = gql`
   template: `
     <a routerLink="/create" class="fixed bg-white top-0 right-0 pa4 ttu dim black no-underline">+ New Post</a>
     <div class="w-100" style="max-width: 400px">
-      <div class="pa3 bg-black-05 ma3" *ngFor="let post of allPosts">
-        <div class="w-100" [ngStyle]="setImage(post.imageUrl)"></div>
-        <div class="pt3">
-          {{post.description}}&nbsp;
-          <span class='red f6 pointer dim' (click)="handleDelete(post.id)">Delete</span>
-        </div>
+      <div class="pa3 bg-black-05 ma3" *ngFor="let user of allUsers">
+        <ul class="pt3">
+          <li>{{user.username}}</li>
+        </ul>
       </div>
     </div>
   `,
@@ -35,8 +31,8 @@ const AllPostsQuery = gql`
 export class FeedComponent implements OnInit, OnDestroy {
 
   loading = true;
-  allPosts: any;
-  allPostsSub: Subscription;
+  allUsers: any;
+  allUsersSub: Subscription;
 
   constructor(
     private apollo: Apollo
@@ -51,40 +47,40 @@ export class FeedComponent implements OnInit, OnDestroy {
     return styles;
   }
 
-  handleDelete(id: string) {
-    this.apollo.mutate({
-      mutation: gql`
-        mutation ($id: ID!) {
-          deletePost(id: $id) {
-            id
-          }
-        }
-      `,
-      variables: {
-        id: id,
-      },
-      updateQueries: {
-        allPosts: (prev: any) => {
-          const allPosts = prev.allPosts.filter(post => post.id !== id);
+  // handleDelete(id: string) {
+  //   this.apollo.mutate({
+  //     mutation: gql`
+  //       mutation ($id: ID!) {
+  //         deletePost(id: $id) {
+  //           id
+  //         }
+  //       }
+  //     `,
+  //     variables: {
+  //       id: id,
+  //     },
+  //     updateQueries: {
+  //       allUsers: (prev: any) => {
+  //         const allUsers = prev.allUsers.filter(post => post.id !== id);
 
-          return {
-            allPosts: [...allPosts]
-          };
-        }
-      }
-    }).toPromise();
-  }
+  //         return {
+  //           allUsers: [...allUsers]
+  //         };
+  //       }
+  //     }
+  //   }).toPromise();
+  // }
 
   ngOnInit() {
-    this.allPostsSub = this.apollo.watchQuery({
-      query: AllPostsQuery
+    this.allUsersSub = this.apollo.watchQuery({
+      query: AllUsersQuery
     }).subscribe(({data, loading}: any) => {
-      this.allPosts = data.allPosts;
+      this.allUsers = data.allUsers;
       this.loading = loading;
     });
   }
 
   ngOnDestroy() {
-    this.allPostsSub.unsubscribe();
+    this.allUsersSub.unsubscribe();
   }
 }

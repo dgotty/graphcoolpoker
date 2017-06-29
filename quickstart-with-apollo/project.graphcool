@@ -1,0 +1,68 @@
+# project: cj4hkbbmfb73z0112d1t899wi
+# version: 50
+
+type File implements Node {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+}
+
+type PokerGame implements Node {
+  createdAt: DateTime!
+  createdBy: User! @relation(name: "PokerGameCreatedBy")
+  finishDate: DateTime
+  finishedBy: User @relation(name: "PokerGameFinishedBy")
+  id: ID! @isUnique
+  name: String!
+  startDate: DateTime
+  updatedAt: DateTime!
+  userStories: [UserStory!]! @relation(name: "UserStoryOnPokerGame")
+}
+
+type StoryPoint implements Node {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  point: StoryPoints!
+  updatedAt: DateTime!
+  user: User! @relation(name: "StoryPointCreatedBy")
+  userStory: UserStory @relation(name: "StoryPointOnUserStory")
+}
+
+enum StoryPoints {
+  Zero
+  One
+  Two
+  Three
+  Five
+  Eight
+}
+
+type User implements Node {
+  createdAt: DateTime!
+  email: String @isUnique
+  firstName: String!
+  id: ID! @isUnique
+  lastName: String!
+  password: String
+  pokerGamesCreated: [PokerGame!]! @relation(name: "PokerGameCreatedBy")
+  pokerGamesFinishedBy: [PokerGame!]! @relation(name: "PokerGameFinishedBy")
+  storyPoints: [StoryPoint!]! @relation(name: "StoryPointCreatedBy")
+  updatedAt: DateTime!
+  userStoriesCreatedBy: [UserStory!]! @relation(name: "UserStoryCreatedBy")
+  username: String! @isUnique
+}
+
+type UserStory implements Node {
+  createdAt: DateTime!
+  createdBy: User! @relation(name: "UserStoryCreatedBy")
+  id: ID! @isUnique
+  pokerGame: PokerGame! @relation(name: "UserStoryOnPokerGame")
+  story: String!
+  storyPoints: [StoryPoint!]! @relation(name: "StoryPointOnUserStory")
+  updatedAt: DateTime!
+}
