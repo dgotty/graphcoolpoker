@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs/Subscription';
-import { MdCardModule } from '@angular/material';
 
 import gql from 'graphql-tag';
 
@@ -23,7 +22,7 @@ const AllPokerGamesQuery = gql`
 @Component({
   selector: 'app-feed',
   template: `
-    <a routerLink="/create">+ New Poker Session</a>
+    <a routerLink="/create">+ New Poker Game</a>
     <md-card *ngFor="let game of allPokerGames">
       <md-card-header>
         <md-card-title>{{game.name}}</md-card-title>

@@ -12,21 +12,13 @@ import gql from 'graphql-tag';
         type="text"
         class="form-control"
         id="descriptionInput"
-        placeholder="Description"
-        [(ngModel)]="description"
-        name="description"
+        placeholder="Poker Game Name"
+        [(ngModel)]="name"
+        name="name"
         required
       />
-      <input
-        type="text"
-        class=""
-        id="urlInput"
-        placeholder="Url"
-        [(ngModel)]="imageUrl"
-        name="imageUrl"
-      />
       <button 
-        (click)="postImage()"
+        (click)="postNewGame()"
       >
         Post
       </button>
@@ -34,27 +26,25 @@ import gql from 'graphql-tag';
   `
 })
 export class NewPostComponent {
-  description: string;
-  imageUrl: string;
+  name: string;
 
   constructor(
     private router: Router,
     private apollo: Apollo
   ) { }
 
-  postImage(): void {
+  postNewGame(): void {
 
     this.apollo.mutate({
       mutation: gql`
-          mutation ($description: String!, $imageUrl: String!){
-              createPost(description: $description, imageUrl: $imageUrl) {
+          mutation ($name: String!){
+              createPokerGame(name: $name, createdById: "cj4hmbxa24enp0140yrisqhz5") {
                   id
               }
           }
       `,
       variables: {
-        description: this.description,
-        imageUrl: this.imageUrl,
+        name: this.name
       },
     })
       .toPromise()
