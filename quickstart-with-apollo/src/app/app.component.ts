@@ -3,7 +3,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <div class="w-100 flex justify-center">
+    <md-toolbar color="primary">
+      <span>Planning Poker</span>
+      <span class="fill-toolbar"></span>
+    </md-toolbar>
+    <div class="main-app-container">
       <router-outlet></router-outlet>
     </div>
   `

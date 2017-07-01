@@ -1,15 +1,21 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs/Subscription';
+import { MdCardModule } from '@angular/material';
 
 import gql from 'graphql-tag';
 
 import 'rxjs/add/operator/toPromise';
 
-const AllUsersQuery = gql`
-  query allUsers {
-      allUsers {
-          username
+const AllPokerGamesQuery = gql`
+  query allPokerGames {
+      allPokerGames {
+          id,
+          name,
+          createdAt,
+          userStories {
+            id
+          }
       }
   }
 `;
@@ -17,22 +23,23 @@ const AllUsersQuery = gql`
 @Component({
   selector: 'app-feed',
   template: `
-    <a routerLink="/create" class="fixed bg-white top-0 right-0 pa4 ttu dim black no-underline">+ New Post</a>
-    <div class="w-100" style="max-width: 400px">
-      <div class="pa3 bg-black-05 ma3" *ngFor="let user of allUsers">
-        <ul class="pt3">
-          <li>{{user.username}}</li>
-        </ul>
-      </div>
-    </div>
-  `,
-  host: {'style': 'width: 100%; display: flex; justify-content: center;'}
+    <a routerLink="/create">+ New Poker Session</a>
+    <md-card *ngFor="let game of allPokerGames">
+      <md-card-header>
+        <md-card-title>{{game.name}}</md-card-title>
+        <md-card-subtitle>{{game.createdAt}}</md-card-subtitle>
+      </md-card-header>
+      <md-card-content>
+        <p>Bacon ipsum dolor amet burgdoggen swine shank porchetta filet mignon chuck short loin ground round turkey sausage. Filet mignon swine leberkas, shank turkey biltong corned beef alcatra. Pastrami t-bone ball tip pork andouille. Chicken pig pork loin pork belly jowl.</p>
+      </md-card-content>
+    </md-card>
+  `
 })
 export class FeedComponent implements OnInit, OnDestroy {
 
   loading = true;
-  allUsers: any;
-  allUsersSub: Subscription;
+  allPokerGames: any;
+  allPokerGamesSub: Subscription;
 
   constructor(
     private apollo: Apollo
@@ -72,15 +79,15 @@ export class FeedComponent implements OnInit, OnDestroy {
   // }
 
   ngOnInit() {
-    this.allUsersSub = this.apollo.watchQuery({
-      query: AllUsersQuery
+    this.allPokerGamesSub = this.apollo.watchQuery({
+      query: AllPokerGamesQuery
     }).subscribe(({data, loading}: any) => {
-      this.allUsers = data.allUsers;
+      this.allPokerGames = data.allPokerGames;
       this.loading = loading;
     });
   }
 
   ngOnDestroy() {
-    this.allUsersSub.unsubscribe();
+    this.allPokerGamesSub.unsubscribe();
   }
 }

@@ -9,6 +9,7 @@ import { FeedComponent } from './feed.component';
 import { NewPostComponent } from './new-post.component';
 import { routes } from './routes';
 import { provideClient } from './client';
+import { MaterialModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { provideClient } from './client';
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    ApolloModule.forRoot(provideClient)
+    ApolloModule.forRoot(provideClient),
+    MaterialModule
   ],
   bootstrap: [ AppComponent ],
 })
